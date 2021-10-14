@@ -37,7 +37,6 @@ temp = source.pipe(ops.filter(lambda text: text.find('temp')>=0), ops.subscribe_
 radar = source.pipe(ops.filter(lambda text: text.find('radar')>=0))
 
 pot_ros = rx.combine_latest(temp, td).pipe( ops.filter(lambda values: get_date(values[0])==get_date(values[1])), ops.map(create_pot_data), ops.subscribe_on(thread_pool_scheduler))
-# rx.combine_latest(pot_ros, radar).subscribe(process_ros, scheduler=thread_pool_scheduler)
-rx.combine_latest(pot_ros, radar).pipe(ops.flat_map(lambda x: rx.from_future(process_ros))).subscribe(lambda x: print(x))
+rx.combine_latest(pot_ros, radar).subscribe(process_ros, scheduler=thread_pool_scheduler)
 
 
